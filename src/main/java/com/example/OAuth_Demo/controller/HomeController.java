@@ -16,23 +16,39 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     @Autowired
-    OAuth2AuthorizedClientService clientService;
+    OAuth2AuthorizedClientService clientService;    //this was not a class created by us.
 
     @GetMapping("/")
     public String home() {
         return "Hello Home";
     }
 
+
     @GetMapping("/secured")
     public String secured() {
+        //to fetch user details
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        OAuth2User user = (OAuth2User) authentication.getPrincipal();   //this user has some attributes stored in it.Some of them are login, company.You can view them when you debug this line.
 
+        //to fetch authentication token shared by github
+        OAuth2AuthenticationToken oauthToken=(OAuth2AuthenticationToken) authentication;
+
+        OAuth2AuthorizedClient client = clientService.loadAuthorizedClient(oauthToken.getAuthorizedClientRegistrationId(), oauthToken.getName());
+        String accessToken = client.getAccessToken().getTokenValue();   //fetches accesstoken
+
+        log.info("user:"+ authentication.getPrincipal());
+        log.info("access token:"+ accessToken);
+
+        OAuth2User user = (OAuth2User) authentication.getPrincipal();   //to get logged in user details
         String login = user.getAttribute("login") != null ? user.getAttribute("login") : "Guest";
         String company = user.getAttribute("company") != null ? user.getAttribute("company") : "Unknown Company";
 
         return "Hello, ".concat(login).concat(" from ").concat(company);
+        //        return "Hello Secured";
     }
+
+
+
+
 
 
 }
