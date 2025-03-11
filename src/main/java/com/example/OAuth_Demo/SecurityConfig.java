@@ -10,7 +10,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean   //copy pasted from resource pdf and added formLogin line
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeHttpRequests(auth->{
+        return httpSecurity
+                .authorizeHttpRequests(auth->{
                     auth.requestMatchers("/").permitAll();
                     auth.anyRequest().authenticated();
                 })
