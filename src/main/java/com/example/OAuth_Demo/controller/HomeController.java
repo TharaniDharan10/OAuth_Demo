@@ -3,6 +3,7 @@ package com.example.OAuth_Demo.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -23,11 +24,10 @@ public class HomeController {
         return "Hello Home";
     }
 
-
     @GetMapping("/secured")
     public String secured() {
         //to fetch user details
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //this could be collected using @AuthenticationPrincipal in a different way
 
         //to fetch authentication token shared by github
         OAuth2AuthenticationToken oauthToken=(OAuth2AuthenticationToken) authentication;
